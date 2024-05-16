@@ -1,5 +1,4 @@
 import React from "react";
-import Welcome from "./components/landinginput";
 import LandingInput from "./components/landinginput";
 
 
@@ -24,4 +23,4 @@ export function Home() {
   );
 }
 
-export default Home;
+
