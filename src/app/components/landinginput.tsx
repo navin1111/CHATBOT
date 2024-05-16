@@ -7,7 +7,7 @@ import { SendHorizontal } from 'lucide-react';
 const LandingInput = () => {
   return (
     <>
-      <Input type="Email" placeholder="Start your first message" />
+      <Input type="Email" placeholder="What can i help you with?" />
       <div  >
         <input
           type="file"
@@ -15,20 +15,20 @@ const LandingInput = () => {
           style={{ display: "none" }}
           className="file-input"
         />
-        <Button 
+        <Button className=" rounded-lg bg-[#F0EEE5]" 
           onClick={() =>
             document.querySelector<HTMLInputElement>(".file-input")?.click()
 
           }
           
-          variant="outline"
+          variant="link"
           
         >
           
           <Paperclip />
         </Button>
         </div>
-      <Button className="w-[20%] bg-[#a65a03] flex" variant="outline" >
+      <Button className="w-[15%] rounded-xl hover:text-white text-white hover:bg-[#BA5B38] bg-[#BA5B38] flex" variant="outline" >
         Start Chat
         <span><SendHorizontal /></span>
       </Button>
