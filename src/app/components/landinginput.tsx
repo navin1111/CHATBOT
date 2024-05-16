@@ -21,13 +21,14 @@ const LandingInput = () => {
 
           }
           
-          variant="link"
+          variant="outline"
           
         >
+          
           <Paperclip />
         </Button>
         </div>
-      <Button className="w-[20%] bg-[#FF5F1F] flex" variant="outline" >
+      <Button className="w-[20%] bg-[#a65a03] flex" variant="outline" >
         Start Chat
         <span><SendHorizontal /></span>
       </Button>
