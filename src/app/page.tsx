@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="w-full flex flex-col h-screen items-center bg-[#f0e9e1] ">
       <div className="w-full h-10 pt-8 flex flex-col justify-center items-center">
-        <span className="font-serif font-bold ">Ask Junior</span>
+        <span className="font-serif font-bold ">CHATBOT</span>
         
       </div>
 
