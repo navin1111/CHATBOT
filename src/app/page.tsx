@@ -1,114 +1,27 @@
-'use client';
+import React from "react";
+import Welcome from "./components/landinginput";
+import LandingInput from "./components/landinginput";
 
-import { useState } from 'react';
-import { Message, continueConversation } from './actions';
-import { readStreamableValue } from 'ai/rsc';
-import { Button } from '@/components/ui/button';
-import styled from 'styled-components';
 
-// Styled components
-const Container = styled.div`
-  display: flex;
-  margin-bottom: 100px;
-  margin-top: 50px;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  background-color: #333; /* Set background color to dark mode */
-  color: #fff; /* Set text color to white */
-  padding: 20px; /* Add padding for better spacing */
-`;
-
-const Heading = styled.h1`
-  margin-top: 50px;
-  margin-bottom: 50px;
-  font-weight: bold; /* Make the heading bold */
-  font-family: 'Arial', sans-serif; /* Change font family */
-`;
-
-const MessageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center align the messages */
-  margin-bottom: 250px;
-`;
-
-const MessageBubble = styled.div`
-  background-color: #555; /* Set message bubble color */
-  color: #fff; /* Set text color to white */
-  padding: 10px 20px;
-  border-radius: 20px; /* Add border radius for rounded corners */
-  margin-bottom: 10px; /* Add margin between messages */
-  max-width: 80%; /* Limit maximum width of message bubble */
-  text-align: left; /* Align text to the left */
-`;
-
-const InputContainer = styled.div`
-  margin-top: 50px;
-`;
-
-const StyledInput = styled.input`
-  padding: 15px;
-  margin-right: 20px;
-  border-radius: 10px;
-  border: none;
-  background-color: #444; /* Set input field background color */
-  color: #fff; /* Set text color to white */
-  font-size: 16px; /* Set font size */
-`;
-
-const StyledButton = styled(Button)`
-  background-color: #007bff;
-  color: #fff;
-  padding: 15px 30px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-`;
-
-// Define the Home component
-export default function Home() {
-  const [conversation, setConversation] = useState<Message[]>([]);
-  const [input, setInput] = useState<string>('');
-
-  // Function to handle sending messages
-  const sendMessage = async () => {
-    const { messages, newMessage } = await continueConversation([
-      ...conversation,
-      { role: 'user', content: input },
-    ]);
-
-    let textContent = '';
-
-    for await (const delta of readStreamableValue(newMessage)) {
-      textContent = `${textContent}${delta}`;
-
-      setConversation([...messages, { role: 'assistant', content: textContent }]);
-    }
-  };
-
-  // Render the Home component
+export function Main() {
   return (
-    <Container>
-      <Heading>WELCOME TO THE CHATBOT</Heading>
-      <MessageContainer>
-        {conversation.map((message, index) => (
-          <MessageBubble key={index}>{message.role}: {message.content}</MessageBubble>
-        ))}
-      </MessageContainer>
+    <div className="w-full flex flex-col h-screen items-center bg-[#f0e9e1] ">
+      <div className="w-full h-10 pt-8 flex flex-col justify-center items-center">
+        <span className="font-serif font-bold ">Ask Junior</span>
+        
+      </div>
 
-      <InputContainer>
-        <StyledInput
-          type="text"
-          value={input}
-          onChange={(event) => {
-            setInput(event.target.value);
-          }}
-          placeholder="Type your message here"
-        />
-
-        <StyledButton onClick={sendMessage}>Send Message</StyledButton>
-      </InputContainer>
-    </Container>
+      <div className="w-[70%] flex flex-col justify-center items-center h-[50%]">
+        <div className="w-full flex flex-col justify-center items-center">
+          <span className="font-bold text-5xl font-serif">Hello all,This is navin</span>
+        </div>
+        <br />
+        <div className="w-full w-[69%] h-[15%]  flex items-center justify-center border border-black p-4 bg-sandal-800 gap-4 p-1flex  rounded-md  bg-background px-1 py-1  ">
+         <LandingInput/>
+        </div>
+      </div>
+    </div>
   );
 }
+
+export default Main;
