@@ -16,7 +16,7 @@ export default function Home() {
           <span className="text-5xl font-serif react-textarea">Hello all,This is navin</span>
         </div>
         <br />
-        <div className="w-[70%] h-[25%] rounded-xl react-textarea flex items-center justify-center border border-slate-300 g-4 p-1flex  rounded-md  bg-[#F8F8F7] px-2 py-2  ">
+        <div className="w-[70%] h-[25%] rounded-xl react-textarea flex items-center justify-center border border-slate-300 flex bg-[#F8F8F7] px-2 py-2  ">
          <LandingInput/>
         </div>
       </div>
