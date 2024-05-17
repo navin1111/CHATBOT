@@ -7,7 +7,7 @@ import { SendHorizontal } from 'lucide-react';
 const LandingInput = () => {
   return (
     <>
-      <Input type="Email" placeholder="What can i help you with?" />
+      <Input type="Email" placeholder="What can i help you with?"  className="bg-[#F8F8F7]" />
       <div  >
         <input
           type="file"
