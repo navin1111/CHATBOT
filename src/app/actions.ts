@@ -4,6 +4,7 @@ import { streamText } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { createStreamableValue } from 'ai/rsc';
 
+
 export interface Message {
   role: 'user' | 'assistant';
   content: string;
@@ -32,5 +33,6 @@ export async function continueConversation(history: Message[]) {
   return {
     messages: history,
     newMessage: stream.value,
+    
   };
 }

@@ -1,19 +1,30 @@
 "use client";
-import { Input } from "@/components/ui/input";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Paperclip } from 'lucide-react';
-import { SendHorizontal } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
-import { Textarea } from "@/components/ui/textarea"
+import { Paperclip, SendHorizontal } from 'lucide-react';
+import { Textarea } from "@/components/ui/textarea";
 
-const LandingInput = () => { 
+interface LandingInputProps {
+  sendMessage: (content: string) => void;
+}
+
+const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
   const [searchText, setSearchText] = useState('');
-  return ( 
-    <div className=" w-full h-10 flex items-center p-2 g-2 bg-[#F8F8F7] rounded-md  ">
+
+  const handleSend = () => {
+    if (searchText.trim() !== '') {
+      sendMessage(searchText);
+      console.log(searchText)
+    }
+  };
+
+  return (
+    <div className="w-full h-10 flex items-center p-2 g-2 bg-[#F8F8F7] rounded-md">
       <Textarea
         placeholder="What can I help you with?"
-        className="bg-[#F8F8F7] cursor-pointer"
+        className="bg-[#F8F8F7] cursor-pointer flex-grow"
         autoFocus
+        value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
       />
       <div>
@@ -25,9 +36,7 @@ const LandingInput = () => {
         />
         <Button
           className="w-[10%] h-[10%] items-center rounded-lg bg-[#F0EEE5]"
-          onClick={() =>
-            document.querySelector<HTMLInputElement>(".file-input")?.click()
-          }
+          onClick={() => document.querySelector<HTMLInputElement>(".file-input")?.click()}
           variant="link"
         >
           <span className="flex items-center justify-center">
@@ -36,14 +45,14 @@ const LandingInput = () => {
         </Button>
       </div>
       <Button
-        className={`${
-          searchText ? 'w-[10%]' : 'w-[15%]'
-        } rounded-xl text-white flex items-center justify-center hover:bg-[#BA5B38] bg-[#BA5B38]`}
+        className={`${searchText ? 'w-[10%]' : 'w-[15%]'} rounded-xl text-white flex items-center justify-center hover:bg-[#BA5B38] bg-[#BA5B38] ml-2`}
         variant="outline"
+        onClick={handleSend}
       >
-        {!searchText && <span className="flex hover:text-white text-white items-center">Start Chat <SendHorizontal className="w4 h-4 p2 text-white" /> </span>}
-        <SendHorizontal className="w-4 h-4 text-white" />
-      </Button></div>
+        {!searchText && <span className="flex hover:text-white text-white items-center">Start Chat <SendHorizontal className="w-4 h-4 text-white" /> </span>}
+        {searchText && <SendHorizontal className="w-4 h-4 text-white" />}
+      </Button>
+    </div>
   );
 };
 
