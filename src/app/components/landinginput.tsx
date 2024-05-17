@@ -19,10 +19,10 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
   };
 
   return (
-    <div className="w-full h-10 flex items-center p-2 g-2 bg-[#F8F8F7] rounded-md">
+    <div className="w-full h-15 rounded-xl g-4 p-2 react-textarea flex items-center justify-center border border-slate-300 bg-[#F8F8F7] px-2 py-2 ">
       <Textarea
         placeholder="What can I help you with?"
-        className="bg-[#F8F8F7] cursor-pointer flex-grow"
+        className="bg-[#F8F8F7] cursor-pointer flex-grow  mr-6"
         autoFocus
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
