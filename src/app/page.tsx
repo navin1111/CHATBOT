@@ -43,15 +43,26 @@ export default function Home() {
 
       <div className="w-[70%] h-[60%] flex flex-col overflow-y-auto mt-5">
         {conversation.map((message, index) => (
-          <div key={index} className={`p-2 ${message.role === 'user' ? 'text-right' : 'text-left'}`}>
-            <span className={`${message.role === 'user' ? 'bg-blue-300' : 'bg-gray-300'} p-2 rounded-lg inline-block`}>
-              {message.content}
-            </span>
+          <div key={index} className={`mb-2 ${message.role === 'user' ? 'justify-start' : 'justify-end'}`}>
+            {message.role === 'user' ? (
+              <div className="inline-block bg-[#f6e8d8] p-2 rounded-xl max-w-[70%]">
+                <div className="flex items-center">
+                  <div className="bg-[#3d3929] w-8 h-8 rounded-full flex items-center justify-center mr-2">
+                    <span className="text-sm text-white hover:text-white font-semibold">U</span>
+                  </div>
+                  <div>{message.content}</div>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-[#F5F4EF] p-2 rounded-xl max-w-[70%]">
+                <div>{message.content}</div>
+              </div>
+            )}
           </div>
         ))}
       </div>
 
-      <div className="w-[70%] h-[15%] flex flex-col justify-center items-center mt-auto mb-5">
+      <div className="w-[70%] h-[10%] flex flex-col justify-center items-center mt-auto mb-5">
         <LandingInput sendMessage={sendMessage} />
       </div>
     </div>
