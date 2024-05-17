@@ -9,7 +9,7 @@ const LandingInput = () => {
  
   return (
     <>
-      <Input type="Email" placeholder="What can i help you with?"  className="bg-[#F8F8F7] cursor-pointer" />
+      <Input type="Email" placeholder="What can i help you with?"  className="bg-[#F8F8F7] cursor-pointer" autoFocus />
       <div  >
         <input
           type="file"
