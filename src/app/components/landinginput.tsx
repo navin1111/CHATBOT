@@ -30,14 +30,10 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
       const pdfurl = `${process.env.NEXT_PUBLIC_CLOUDFLARE_CDN_URL}${fileName}`;
       console.log({ pdfurl });
     
-      try {
-        const text_response = await axios.post(askjunior_url, { pdf_url: pdfurl });
-        console.log("Text extraction successful:", text_response.data.text);
-      } catch (error) {
-        console.error("Error extracting text from pdf:", error);
-      }
+      const text_response = await axios.post(askjunior_url, { pdf_url: pdfurl });
+      console.log("Text extraction successful:", text_response.data.text);
     } catch (error) {
-      console.error("Error uploading file:", error);
+      console.error("Error:", error);
     }
     
   };
