@@ -1,8 +1,8 @@
-"use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Paperclip, SendHorizontal } from 'lucide-react';
 import { Textarea } from "@/components/ui/textarea";
+import axios from 'axios';
 
 interface LandingInputProps {
   sendMessage: (content: string) => void;
@@ -10,6 +10,35 @@ interface LandingInputProps {
 
 const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
   const [searchText, setSearchText] = useState('');
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    const file = files[0];
+
+    const url = process.env.NEXT_PUBLIC_CLOUDFLARE_API_URL || "";
+    const headers = {
+      "Content-Type": "application/pdf",
+    };
+
+    try {
+      const response = await axios.put(url, file, { headers });
+      if (response.status === 202) {
+        console.log("File upload accepted for processing. Check again later for completion status.");
+      } else if (response.status === 200) {
+        console.log("File upload successful!");
+        // Handle successful upload response
+        // For example, you can display a success message to the user
+      } else {
+        console.log(`Unexpected response status: ${response.status}`);
+        // Handle unexpected response status
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      // Handle error
+    }
+  };
 
   const handleSend = () => {
     if (searchText.trim() !== '') {
@@ -33,6 +62,7 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
           accept="application/pdf"
           style={{ display: "none" }}
           className="file-input"
+          onChange={handleFileUpload}
         />
         <Button
           className="w-[10%] h-[10%] items-center rounded-lg bg-[#F0EEE5]"
