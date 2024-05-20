@@ -19,6 +19,7 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
     const fileName = file.name;
 
     const url = `${process.env.NEXT_PUBLIC_CLOUDFLARE_API_URL}${fileName}`;
+    const askjunior_url=`${process.env.NEXT_PUBLIC_TEXT_EXTRACTION_URL}`;
     const headers = {
       "Content-Type": "application/pdf",
     };
@@ -29,15 +30,21 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
         console.log("File upload accepted for processing. Check again later for completion status.");
       } else if (response.status === 200) {
         console.log("File upload successful!");
-        // Handle successful upload response
-        // For example, you can display a success message to the user
+        const pdfurl = `${process.env.NEXT_PUBLIC_CLOUDFLARE_CDN_URL}${fileName}`;
+        console.log({ pdfurl });
+
+        try {
+          const text_response = await axios.post(askjunior_url, { pdf_url: pdfurl });
+          console.log("text_response =", text_response.data.text);
+        } catch (error) {
+          console.error("Error extracting text from pdf:", error);
+        }
+
       } else {
         console.log(`Unexpected response status: ${response.status}`);
-        // Handle unexpected response status
       }
     } catch (error) {
       console.error("Error uploading file:", error);
-      // Handle error
     }
   };
 
