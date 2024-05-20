@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Paperclip, SendHorizontal } from 'lucide-react';
 import { Textarea } from "@/components/ui/textarea";
 import axios from 'axios';
+import { FileText } from 'lucide-react';
 
 interface LandingInputProps {
   sendMessage: (content: string) => void;
@@ -10,6 +11,7 @@ interface LandingInputProps {
 
 const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
   const [searchText, setSearchText] = useState('');
+  const [uploadCompleted, setUploadCompleted] = useState(false); 
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -32,6 +34,7 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
     
       const text_response = await axios.post(askjunior_url, { pdf_url: pdfurl });
       console.log("Text extraction successful:", text_response.data.text);
+      setUploadCompleted(true);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -46,7 +49,21 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
   };
 
   return (
+   
+    
+    
     <div className="w-full h-15 rounded-xl g-4 p-2 react-textarea flex items-center justify-center border border-slate-300 bg-[#F8F8F7] px-2 py-2">
+   {uploadCompleted && (
+        <div className="absolute bottom-[50px] right-[-220px] w-full flex items-center justify-start">
+          <div className="border border-blue-500 p-4 rounded-lg bg-white">
+            <span className="flex items-center justify-center mb-2 text-blue-500">
+              <FileText className="w-6 h-6" />
+            </span>
+            <span className="text-sm text-blue-500">UPLOADED</span>
+          </div>
+        </div>
+      )}
+
       <Textarea
         placeholder="What can I help you with?"
         className="bg-[#F8F8F7] cursor-pointer flex-grow mr-6"
@@ -81,6 +98,7 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
         {searchText && <SendHorizontal className="w-4 h-4 text-white" />}
       </Button>
     </div>
+    
   );
 };
 
