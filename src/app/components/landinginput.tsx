@@ -26,26 +26,20 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
 
     try {
       const response = await axios.put(url, file, { headers });
-      if (response.status === 202) {
-        console.log("File upload accepted for processing. Check again later for completion status.");
-      } else if (response.status === 200) {
-        console.log("File upload successful!");
-        const pdfurl = `${process.env.NEXT_PUBLIC_CLOUDFLARE_CDN_URL}${fileName}`;
-        console.log({ pdfurl });
-
-        try {
-          const text_response = await axios.post(askjunior_url, { pdf_url: pdfurl });
-          console.log("text_response =", text_response.data.text);
-        } catch (error) {
-          console.error("Error extracting text from pdf:", error);
-        }
-
-      } else {
-        console.log(`Unexpected response status: ${response.status}`);
+      console.log("File upload successful!");
+      const pdfurl = `${process.env.NEXT_PUBLIC_CLOUDFLARE_CDN_URL}${fileName}`;
+      console.log({ pdfurl });
+    
+      try {
+        const text_response = await axios.post(askjunior_url, { pdf_url: pdfurl });
+        console.log("Text extraction successful:", text_response.data.text);
+      } catch (error) {
+        console.error("Error extracting text from pdf:", error);
       }
     } catch (error) {
       console.error("Error uploading file:", error);
     }
+    
   };
 
   const handleSend = () => {
