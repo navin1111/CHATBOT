@@ -16,8 +16,9 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
     if (!files || files.length === 0) return;
 
     const file = files[0];
+    const fileName = file.name;
 
-    const url = process.env.NEXT_PUBLIC_CLOUDFLARE_API_URL || "";
+    const url = `${process.env.NEXT_PUBLIC_CLOUDFLARE_API_URL}${fileName}`;
     const headers = {
       "Content-Type": "application/pdf",
     };
