@@ -1,17 +1,22 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Paperclip, SendHorizontal } from 'lucide-react';
+import { Paperclip, SendHorizontal, FileText, Loader } from 'lucide-react'; // Import Loader icon
 import { Textarea } from "@/components/ui/textarea";
 import axios from 'axios';
-import { FileText } from 'lucide-react';
 
 interface LandingInputProps {
   sendMessage: (content: string) => void;
 }
 
+const truncateFileName = (fileName: string, maxLength: number) => {
+  if (fileName.length <= maxLength) return fileName;
+  return `${fileName.slice(0, maxLength)}...`;
+};
+
 const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
   const [searchText, setSearchText] = useState('');
-  const [uploadCompleted, setUploadCompleted] = useState(false); 
+  const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false); // State for loading
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -21,24 +26,27 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
     const fileName = file.name;
 
     const url = `${process.env.NEXT_PUBLIC_CLOUDFLARE_API_URL}${fileName}`;
-    const askjunior_url=`${process.env.NEXT_PUBLIC_TEXT_EXTRACTION_URL}`;
+    const askjunior_url = `${process.env.NEXT_PUBLIC_TEXT_EXTRACTION_URL}`;
     const headers = {
       "Content-Type": "application/pdf",
     };
+
+    setIsUploading(true); // Set loading to true
 
     try {
       const response = await axios.put(url, file, { headers });
       console.log("File upload successful!");
       const pdfurl = `${process.env.NEXT_PUBLIC_CLOUDFLARE_CDN_URL}${fileName}`;
       console.log({ pdfurl });
-    
+
       const text_response = await axios.post(askjunior_url, { pdf_url: pdfurl });
       console.log("Text extraction successful:", text_response.data.text);
-      setUploadCompleted(true);
+      setUploadedFileName(fileName);
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setIsUploading(false); // Set loading to false after upload is done
     }
-    
   };
 
   const handleSend = () => {
@@ -49,17 +57,14 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
   };
 
   return (
-   
-    
-    
     <div className="w-full h-15 rounded-xl g-4 p-2 react-textarea flex items-center justify-center border border-slate-300 bg-[#F8F8F7] px-2 py-2">
-   {uploadCompleted && (
+      {uploadedFileName && (
         <div className="absolute bottom-[50px] right-[-220px] w-full flex items-center justify-start">
           <div className="border border-blue-500 p-4 rounded-lg bg-white">
             <span className="flex items-center justify-center mb-2 text-blue-500">
               <FileText className="w-6 h-6" />
             </span>
-            <span className="text-sm text-blue-500">UPLOADED</span>
+            <span className="text-sm text-blue-500">{truncateFileName(uploadedFileName, 20)}</span>
           </div>
         </div>
       )}
@@ -85,7 +90,11 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
           variant="link"
         >
           <span className="flex items-center justify-center">
-            <Paperclip className="w-4 h-4" />
+            {isUploading ? (
+              <Loader className="w-4 h-4 animate-spin" /> // Loading icon during upload
+            ) : (
+              <Paperclip className="w-4 h-4" /> // Paperclip icon after upload
+            )}
           </span>
         </Button>
       </div>
@@ -98,7 +107,6 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
         {searchText && <SendHorizontal className="w-4 h-4 text-white" />}
       </Button>
     </div>
-    
   );
 };
 
