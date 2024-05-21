@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Paperclip, SendHorizontal, FileText, Loader } from 'lucide-react'; // Import Loader icon
+import { Paperclip, SendHorizontal, FileText, Loader, X } from 'lucide-react'; // Import X icon for close button
 import { Textarea } from "@/components/ui/textarea";
 import axios from 'axios';
 
@@ -56,15 +56,22 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
     }
   };
 
+  const handleCloseUploadBox = () => {
+    setUploadedFileName(null); // Reset the uploaded file name
+  };
+
   return (
-    <div className="w-full h-15 rounded-xl g-4 p-2 react-textarea flex items-center justify-center border border-slate-300 bg-[#F8F8F7] px-2 py-2">
+    <div className="w-full h-15 rounded-xl g-4 p-2 react-textarea flex items-center justify-center border border-slate-300 bg-[#F8F8F7] px-2 py-2 relative">
       {uploadedFileName && (
-        <div className="absolute bottom-[50px] right-[-220px] w-full flex items-center justify-start">
-          <div className="border border-blue-500 p-4 rounded-lg bg-white">
+        <div className="absolute bottom-[45px] right-[-10px] w-full flex items-center justify-start">
+          <div className="border border-blue-500 p-4 rounded-lg bg-white relative">
+            <button onClick={handleCloseUploadBox} className="absolute top-2 left-2 text-blue-500">
+              <X className="w-4 h-4" />
+            </button>
             <span className="flex items-center justify-center mb-2 text-blue-500">
               <FileText className="w-6 h-6" />
             </span>
-            <span className="text-sm text-blue-500">{truncateFileName(uploadedFileName, 20)}</span>
+            <span className="text-sm text-blue-500 ml-2">{truncateFileName(uploadedFileName, 20)}</span>
           </div>
         </div>
       )}
