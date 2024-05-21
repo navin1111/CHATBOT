@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Paperclip, SendHorizontal, FileText, Loader, X } from 'lucide-react'; // Import X icon for close button
+import { Paperclip, SendHorizontal, FileText, Loader, X } from 'lucide-react';
 import { Textarea } from "@/components/ui/textarea";
 import axios from 'axios';
 
 interface LandingInputProps {
   sendMessage: (content: string) => void;
-  setExtractedText: (text: string) => void; // New prop to pass extracted text
+  setExtractedText: (text: string) => void;
+  setUploadedFileName: (fileName: string | null) => void;
+  setShowUploadedFileNameBox: (show: boolean) => void;
+  setMoveFileNameBoxAbove: (move: boolean) => void;
 }
 
 const truncateFileName = (fileName: string, maxLength: number) => {
@@ -14,10 +17,10 @@ const truncateFileName = (fileName: string, maxLength: number) => {
   return `${fileName.slice(0, maxLength)}...`;
 };
 
-const LandingInput: React.FC<LandingInputProps> = ({ sendMessage, setExtractedText }) => {
+const LandingInput: React.FC<LandingInputProps> = ({ sendMessage, setExtractedText, setUploadedFileName, setShowUploadedFileNameBox, setMoveFileNameBoxAbove }) => {
   const [searchText, setSearchText] = useState('');
-  const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false); // State for loading
+  const [uploadedFileName, setUploadedFileNameState] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -32,7 +35,7 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage, setExtractedTe
       "Content-Type": "application/pdf",
     };
 
-    setIsUploading(true); // Set loading to true
+    setIsUploading(true);
 
     try {
       const response = await axios.put(url, file, { headers });
@@ -42,12 +45,14 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage, setExtractedTe
 
       const text_response = await axios.post(askjunior_url, { pdf_url: pdfurl });
       console.log("Text extraction successful:", text_response.data.text);
+      setUploadedFileNameState(fileName);
       setUploadedFileName(fileName);
-      setExtractedText(text_response.data.text); // Set extracted text in parent component
+      setExtractedText(text_response.data.text);
+      setShowUploadedFileNameBox(false); // Set showUploadedFileNameBox to false after file upload and text extraction
     } catch (error) {
       console.error("Error:", error);
     } finally {
-      setIsUploading(false); // Set loading to false after upload is done
+      setIsUploading(false);
     }
   };
 
@@ -55,35 +60,44 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage, setExtractedTe
     if (searchText.trim() !== '') {
       sendMessage(searchText);
       setSearchText('');
+      setShowUploadedFileNameBox(true); // Set showUploadedFileNameBox to true when a message is sent
     }
   };
 
   const handleCloseUploadBox = () => {
-    setUploadedFileName(null); // Reset the uploaded file name
+    setUploadedFileNameState(null);
+    setUploadedFileName(null);
+    setShowUploadedFileNameBox(true); // Set showUploadedFileNameBox to true when the upload box is closed
   };
 
   return (
     <div className="w-full h-15 rounded-xl g-4 p-2 react-textarea flex items-start justify-start border border-slate-300 bg-[#F8F8F7] px-2 py-2 relative">
-      {uploadedFileName && (
-        <div className="absolute bottom-[45px] justify-start flex items-start">
-          <div className="border border-blue-500 p-4 rounded-lg bg-white relative">
-            <button onClick={handleCloseUploadBox} className="absolute top-2 left-2 text-blue-500">
-              <X className="w-4 h-4" />
-            </button>
-            <span className="flex items-center justify-center mb-2 text-blue-500">
-              <FileText className="w-6 h-6" />
-            </span>
-            <span className="text-sm text-blue-500 ml-2">{truncateFileName(uploadedFileName, 20)}</span>
-          </div>
-        </div>
-      )}
+      {uploadedFileName && !setShowUploadedFileNameBox && (
+         <div className="absolute bottom-[45px]  justify-start flex items-start">
+         <div className="border border-blue-500 p-4  rounded-lg bg-white relative items-start justify-start">
+           <button onClick={handleCloseUploadBox} className="absolute top-2 left-2 text-blue-500">
+             <X className="w-4 h-4" />
+           </button>
+           <span className="flex items-center justify-center mb-2 text-blue-500">
+             <FileText className="w-6 h-6" />
+           </span>
+           <span className="text-sm text-blue-500 ml-2">{truncateFileName(uploadedFileName, 20)}</span>
+         </div>
+       </div>
+     )}
 
       <Textarea
         placeholder="What can I help you with?"
         className="bg-[#F8F8F7] cursor-pointer flex-grow mr-6"
         autoFocus
         value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
+        onChange={(e) => {
+          setSearchText(e.target.value);
+          if (e.target.value.trim() !== '') {
+            setShowUploadedFileNameBox(true); // Show the uploaded file name box when there is text input
+            setMoveFileNameBoxAbove(true); // Move the uploaded file name box above the conversation
+          }
+        }}
       />
       <div>
         <input
@@ -100,9 +114,9 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage, setExtractedTe
         >
           <span className="flex items-center justify-center">
             {isUploading ? (
-              <Loader className="w-4 h-4 animate-spin" /> // Loading icon during upload
+              <Loader className="w-4 h-4 animate-spin" />
             ) : (
-              <Paperclip className="w-4 h-4" /> // Paperclip icon after upload
+              <Paperclip className="w-4 h-4" />
             )}
           </span>
         </Button>
