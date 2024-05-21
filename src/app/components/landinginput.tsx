@@ -72,18 +72,21 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage, setExtractedTe
 
   return (
     <div className="w-full h-15 rounded-xl g-4 p-2 react-textarea flex items-start justify-start border border-slate-300 bg-[#F8F8F7] px-2 py-2 relative">
-      {uploadedFileName && !setShowUploadedFileNameBox && (
-         <div className="absolute bottom-[45px]  justify-start flex items-start">
-         <div className="border border-blue-500 p-4  rounded-lg bg-white relative items-start justify-start">
-           <button onClick={handleCloseUploadBox} className="absolute top-2 left-2 text-blue-500">
-             <X className="w-4 h-4" />
-           </button>
-           <span className="flex items-center justify-center mb-2 text-blue-500">
-             <FileText className="w-6 h-6" />
-           </span>
-           <span className="text-sm text-blue-500 ml-2">{truncateFileName(uploadedFileName, 20)}</span>
-         </div>
-       </div>
+    {uploadedFileName && !setShowUploadedFileNameBox && (
+      <div className="absolute bottom-[65px]  justify-start flex items-start">
+        <div className="border border-blue-500 p-4 rounded-lg bg-white relative items-start justify-start">
+          <button onClick={handleCloseUploadBox} className="absolute top-2 left-2 text-blue-500">
+            <X className="w-4 h-4" />
+          </button>
+          <span className="flex items-center justify-center mb-2 text-blue-500">
+            <FileText className="w-6 h-6" />
+          </span>
+          <span className="text-sm text-blue-500 ml-2">
+            {truncateFileName(uploadedFileName, 20)}
+          </span>
+        </div>
+      </div>
+   
      )}
 
       <Textarea

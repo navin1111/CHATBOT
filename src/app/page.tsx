@@ -88,7 +88,8 @@ export default function Home() {
 
       {!moveFileNameBoxAbove && uploadedFileName && (
         <div className="w-[70%] flex flex-col mt-30   bottom-[55px] items-start justify-start mb-2">
-          <div className="border border-blue-500  p-4 rounded-lg bg-white relative">
+          <div className="border blue border-blue-500  p-4 rounded-lg bg-white relative">
+            
             <span className="flex items-center justify-center mb-1 text-blue-500">
               <FileText className="w-6 h-6" />
             </span>
