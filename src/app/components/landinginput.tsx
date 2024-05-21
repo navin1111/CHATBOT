@@ -92,7 +92,7 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
           onChange={handleFileUpload}
         />
         <Button
-          className="w-[10%] h-[10%] items-center rounded-lg bg-[#F0EEE5]"
+          className="w-[10%] h-[10%] mt-1 items-center rounded-lg bg-[#F0EEE5]"
           onClick={() => document.querySelector<HTMLInputElement>(".file-input")?.click()}
           variant="link"
         >
@@ -106,7 +106,7 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
         </Button>
       </div>
       <Button
-        className={`${searchText ? 'w-[10%]' : 'w-[15%]'} rounded-xl text-white flex items-center justify-center hover:bg-[#BA5B38] bg-[#BA5B38] ml-2`}
+        className={`${searchText ? 'w-[10%]' : 'w-[10%]'} rounded-xl text-white flex items-center justify-center hover:bg-[#BA5B38] bg-[#BA5B38] ml-2`}
         variant="outline"
         onClick={handleSend}
       >
