@@ -6,6 +6,7 @@ import axios from 'axios';
 
 interface LandingInputProps {
   sendMessage: (content: string) => void;
+  setExtractedText: (text: string) => void; // New prop to pass extracted text
 }
 
 const truncateFileName = (fileName: string, maxLength: number) => {
@@ -13,7 +14,7 @@ const truncateFileName = (fileName: string, maxLength: number) => {
   return `${fileName.slice(0, maxLength)}...`;
 };
 
-const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
+const LandingInput: React.FC<LandingInputProps> = ({ sendMessage, setExtractedText }) => {
   const [searchText, setSearchText] = useState('');
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false); // State for loading
@@ -42,6 +43,7 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
       const text_response = await axios.post(askjunior_url, { pdf_url: pdfurl });
       console.log("Text extraction successful:", text_response.data.text);
       setUploadedFileName(fileName);
+      setExtractedText(text_response.data.text); // Set extracted text in parent component
     } catch (error) {
       console.error("Error:", error);
     } finally {

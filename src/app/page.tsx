@@ -1,12 +1,16 @@
 "use client";
+// Home.tsx
+"use client";
+
 import React, { useState } from "react";
-import LandingInput from './components/landinginput';
-import { Message, continueConversation } from './actions';
-import { readStreamableValue } from 'ai/rsc';
+import LandingInput from "./components/landinginput";
+import { Message, continueConversation } from "./actions";
+import { readStreamableValue } from "ai/rsc";
 
 export default function Home() {
   const [conversation, setConversation] = useState<Message[]>([]);
-  const [lastUserMessage, setLastUserMessage] = useState<string>('');
+  const [lastUserMessage, setLastUserMessage] = useState<string>("");
+  const [extractedText, setExtractedText] = useState<string>("");
 
   const sendMessage = async (content: string) => {
     if (content === lastUserMessage) {
@@ -15,20 +19,24 @@ export default function Home() {
 
     setLastUserMessage(content);
 
-    const { messages, newMessage } = await continueConversation([
-      ...conversation,
-      { role: 'user', content },
-    ]);
+    // Execute the server function
+    const { messages, newMessage } = await continueConversation(
+      [...conversation],
+      content,
+      extractedText // Pass extracted text from PDF
+    );
 
-    let fullMessage = '';
-    for await (const delta of readStreamableValue(newMessage)) {
+    let fullMessage = "";
+    const reader = readStreamableValue(newMessage); // Get the reader for the StreamableValue
+
+    for await (const delta of reader) { // Use reader to get the stream updates
       fullMessage += delta;
     }
 
     setConversation((prevConversation) => [
       ...prevConversation,
-      { role: 'user', content },
-      { role: 'assistant', content: fullMessage },
+      { role: "user", content },
+      { role: "assistant", content: fullMessage },
     ]);
   };
 
@@ -43,8 +51,8 @@ export default function Home() {
 
       <div className="w-[70%] h-[60%] flex flex-col overflow-y-auto mt-5">
         {conversation.map((message, index) => (
-          <div key={index} className={`mb-2 ${message.role === 'user' ? 'justify-start' : 'justify-end'}`}>
-            {message.role === 'user' ? (
+          <div key={index} className={`mb-2 ${message.role === "user" ? "justify-start" : "justify-end"}`}>
+            {message.role === "user" ? (
               <div className="inline-block bg-[#f6e8d8] p-2 rounded-xl max-w-[70%]">
                 <div className="flex items-center">
                   <div className="bg-[#3d3929] w-8 h-8 rounded-full flex items-center justify-center mr-2">
@@ -63,7 +71,7 @@ export default function Home() {
       </div>
 
       <div className="w-[70%] h-[10%] flex flex-col justify-center items-center mt-auto mb-5">
-        <LandingInput sendMessage={sendMessage} />
+        <LandingInput sendMessage={sendMessage} setExtractedText={setExtractedText} />
       </div>
     </div>
   );
