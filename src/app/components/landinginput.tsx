@@ -61,9 +61,9 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage }) => {
   };
 
   return (
-    <div className="w-full h-15 rounded-xl g-4 p-2 react-textarea flex items-center justify-center border border-slate-300 bg-[#F8F8F7] px-2 py-2 relative">
+    <div className="w-full h-15 rounded-xl g-4 p-2 react-textarea flex items-start justify-start border border-slate-300 bg-[#F8F8F7] px-2 py-2 relative">
       {uploadedFileName && (
-        <div className="absolute bottom-[45px] right-[700px] flex items-center justify-start">
+        <div className="absolute bottom-[45px] justify-start flex items-start">
           <div className="border border-blue-500 p-4 rounded-lg bg-white relative">
             <button onClick={handleCloseUploadBox} className="absolute top-2 left-2 text-blue-500">
               <X className="w-4 h-4" />
