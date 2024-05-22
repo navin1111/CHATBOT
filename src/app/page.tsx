@@ -43,6 +43,7 @@ export default function Home() {
 
     // Move the file name box above the conversation once the user sends a message
     setMoveFileNameBoxAbove(true);
+    setShowUploadedFileNameBox(true); // Ensure the uploaded file name box is shown
   };
 
   return (
@@ -57,6 +58,7 @@ export default function Home() {
       {uploadedFileName && moveFileNameBoxAbove && (
         <div className="w-[70%] flex flex-col items-start justify-start">
           <div className="border border-blue-500 p-4 rounded-lg bg-white relative mb-2">
+            
             <span className="flex items-center justify-center mb-2 text-blue-500">
               <FileText className="w-6 h-6" />
             </span>
@@ -87,9 +89,8 @@ export default function Home() {
       </div>
 
       {!moveFileNameBoxAbove && uploadedFileName && (
-        <div className="w-[70%] flex flex-col mt-30   bottom-[55px] items-start justify-start mb-2">
+        <div className="w-[70%] flex flex-col mt-30 bottom-[55px] items-start justify-start mb-2">
           <div className="border blue border-blue-500  p-4 rounded-lg bg-white relative">
-            
             <span className="flex items-center justify-center mb-1 text-blue-500">
               <FileText className="w-6 h-6" />
             </span>

@@ -89,19 +89,19 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage, setExtractedTe
    
      )}
 
-      <Textarea
-        placeholder="What can I help you with?"
-        className="bg-[#F8F8F7] cursor-pointer flex-grow mr-6"
-        autoFocus
-        value={searchText}
-        onChange={(e) => {
-          setSearchText(e.target.value);
-          if (e.target.value.trim() !== '') {
-            setShowUploadedFileNameBox(true); // Show the uploaded file name box when there is text input
-            setMoveFileNameBoxAbove(true); // Move the uploaded file name box above the conversation
-          }
-        }}
-      />
+<Textarea
+  placeholder="What can I help you with?"
+  className="bg-[#F8F8F7] cursor-pointer flex-grow mr-6"
+  autoFocus
+  value={searchText}
+  onChange={(e) => {
+    setSearchText(e.target.value);
+    if (e.target.value.trim() !== '') {
+      setShowUploadedFileNameBox(true); // Show the uploaded file name box when there is text input
+       // Move the uploaded file name box above the conversation
+    }
+  }}
+/>
       <div>
         <input
           type="file"
