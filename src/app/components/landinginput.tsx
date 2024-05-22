@@ -89,6 +89,9 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage, setExtractedTe
    
      )}
 
+
+     
+
 <Textarea
   placeholder="What can I help you with?"
   className="bg-[#F8F8F7] cursor-pointer flex-grow mr-6"

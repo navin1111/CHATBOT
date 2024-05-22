@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import LandingInput from "./components/landinginput";
 import { Message, continueConversation } from "./actions";
 import { readStreamableValue } from "ai/rsc";
-import { FileText } from "lucide-react";
+import { FileText, X } from "lucide-react";
 
 export default function Home() {
   const [conversation, setConversation] = useState<Message[]>([]);
@@ -45,6 +45,19 @@ export default function Home() {
     setMoveFileNameBoxAbove(true);
     setShowUploadedFileNameBox(true); // Ensure the uploaded file name box is shown
   };
+  function truncateFileName(fileName: string, maxLength: number): React.ReactNode {
+    if (fileName.length <= maxLength) {
+      return fileName;
+    }
+    const truncatedName = fileName.slice(0, maxLength) + "...";
+    return truncatedName;
+  }
+
+  function handleCloseUploadBox(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    // Implement the logic for closing the upload box here
+    setShowUploadedFileNameBox(false);
+    setUploadedFileName(null);
+  }
 
   return (
     <div className="w-full flex flex-col h-screen items-center bg-[#f0e9e1] react-textarea">
@@ -54,10 +67,15 @@ export default function Home() {
       <div className="w-full flex flex-col justify-center items-center">
         <span className="text-5xl font-serif react-textarea">Hello all, This is Navin</span>
       </div>
+    
+    <div></div>
 
       {uploadedFileName && moveFileNameBoxAbove && (
         <div className="w-[70%] flex flex-col items-start justify-start">
           <div className="border border-blue-500 p-4 rounded-lg bg-white relative mb-2">
+          <button onClick={handleCloseUploadBox} className="absolute top-2 left-2 text-blue-500">
+            <X className="w-4 h-4" />
+          </button>
             
             <span className="flex items-center justify-center mb-2 text-blue-500">
               <FileText className="w-6 h-6" />
@@ -67,7 +85,10 @@ export default function Home() {
         </div>
       )}
 
+      
+
       <div className="w-[70%] h-[60%] flex flex-col overflow-y-auto mt-5">
+     
         {conversation.map((message, index) => (
           <div key={index} className={`mb-2 ${message.role === "user" ? "justify-start" : "justify-end"}`}>
             {message.role === "user" ? (
@@ -86,18 +107,26 @@ export default function Home() {
             )}
           </div>
         ))}
+
+{!moveFileNameBoxAbove && uploadedFileName && (
+        <div className="absolute bottom-[65px]  justify-start flex items-start">
+        <div className="border border-blue-500 p-4 rounded-lg bg-white relative items-start justify-start">
+          <button onClick={handleCloseUploadBox} className="absolute top-2 left-2 text-blue-500">
+            <X className="w-4 h-4" />
+          </button>
+          <span className="flex items-center justify-center mb-2 text-blue-500">
+            <FileText className="w-6 h-6" />
+          </span>
+          <span className="text-sm text-blue-500 ml-2">
+            {truncateFileName(uploadedFileName, 20)}
+          </span>
+        </div>
+      </div>
+      )}
+       
       </div>
 
-      {!moveFileNameBoxAbove && uploadedFileName && (
-        <div className="w-[70%] flex flex-col mt-30 bottom-[55px] items-start justify-start mb-2">
-          <div className="border blue border-blue-500  p-4 rounded-lg bg-white relative">
-            <span className="flex items-center justify-center mb-1 text-blue-500">
-              <FileText className="w-6 h-6" />
-            </span>
-            <span className="text-sm text-blue-500 ml-2">{uploadedFileName}</span>
-          </div>
-        </div>
-      )}
+     
 
       <div className="w-[70%] h-[10%] flex flex-col justify-center items-center mt-auto mb-5">
         <LandingInput 
