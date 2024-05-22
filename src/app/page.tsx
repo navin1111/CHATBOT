@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import LandingInput from "./components/landinginput";
 import { Message, continueConversation } from "./actions";
 import { readStreamableValue } from "ai/rsc";
 import { FileText, X } from "lucide-react";
+import { ClerkProvider, SignInButton, SignedIn, UserButton } from '@clerk/nextjs';
+import { useUser } from "@clerk/clerk-react";
 
 export default function Home() {
   const [conversation, setConversation] = useState<Message[]>([]);
@@ -13,6 +15,11 @@ export default function Home() {
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const [showUploadedFileNameBox, setShowUploadedFileNameBox] = useState<boolean>(false);
   const [moveFileNameBoxAbove, setMoveFileNameBoxAbove] = useState<boolean>(false);
+  const { isSignedIn, user, isLoaded } = useUser();
+
+  interface YourComponentProps {
+    children: ReactNode;
+  }
 
   const sendMessage = async (content: string) => {
     if (content === lastUserMessage) {
@@ -45,6 +52,7 @@ export default function Home() {
     setMoveFileNameBoxAbove(true);
     setShowUploadedFileNameBox(true); // Ensure the uploaded file name box is shown
   };
+
   function truncateFileName(fileName: string, maxLength: number): React.ReactNode {
     if (fileName.length <= maxLength) {
       return fileName;
@@ -59,24 +67,40 @@ export default function Home() {
     setUploadedFileName(null);
   }
 
+  const handleUpdateUser = () => {
+    // Example logic to update user name (you might want to replace it with actual logic)
+    updateUser({ firstName: "UpdatedName" });
+  }
+
   return (
     <div className="w-full flex flex-col h-screen items-center bg-[#f0e9e1] react-textarea">
-      <div className="w-full h-20 pb-2 flex flex-col justify-center items-center">
-        <span className="font-bold font-serif text-2xl react-textarea">Chatbot</span>
+      <div className="w-full h-20 pb-2 flex flex-col justify-center items-center relative">
+        <span className="font-bold font-serif text-2xl react-textarea absolute left-4">Chatbot</span>
+        <div className="absolute right-4">
+          {isSignedIn ? <UserButton /> : <div className="flex rounded-xl hover:text-white text-white items-center justify-center hover:bg-[#BA5B38] bg-[#BA5B38] w-20 h-10"><  SignInButton /></div>}
+        </div>
       </div>
       <div className="w-full flex flex-col justify-center items-center">
-        <span className="text-5xl font-serif react-textarea">Hello all, This is Navin</span>
+        {isLoaded && isSignedIn ? (
+          <>
+            <span className="text-5xl font-serif react-textarea">
+              Hello all, This is {user.fullName}!
+            </span>
+            
+          </>
+        ) : (
+          <span className="text-5xl font-serif react-textarea">
+            Welcome! Please sign in.
+          </span>
+        )}
       </div>
-    
-    <div></div>
 
       {uploadedFileName && moveFileNameBoxAbove && (
         <div className="w-[70%] flex flex-col items-start justify-start">
           <div className="border border-blue-500 p-4 rounded-lg bg-white relative mb-2">
-          <button onClick={handleCloseUploadBox} className="absolute top-2 left-2 text-blue-500">
-            <X className="w-4 h-4" />
-          </button>
-            
+            <button onClick={handleCloseUploadBox} className="absolute top-2 left-2 text-blue-500">
+              <X className="w-4 h-4" />
+            </button>
             <span className="flex items-center justify-center mb-2 text-blue-500">
               <FileText className="w-6 h-6" />
             </span>
@@ -85,10 +109,7 @@ export default function Home() {
         </div>
       )}
 
-      
-
       <div className="w-[70%] h-[60%] flex flex-col overflow-y-auto mt-5">
-     
         {conversation.map((message, index) => (
           <div key={index} className={`mb-2 ${message.role === "user" ? "justify-start" : "justify-end"}`}>
             {message.role === "user" ? (
@@ -107,12 +128,7 @@ export default function Home() {
             )}
           </div>
         ))}
-
-
-       
       </div>
-
-     
 
       <div className="w-[70%] h-[10%] flex flex-col justify-start items-start mt-auto mb-5">
         <LandingInput 
@@ -121,26 +137,28 @@ export default function Home() {
           setUploadedFileName={setUploadedFileName}
           setShowUploadedFileNameBox={setShowUploadedFileNameBox}
           setMoveFileNameBoxAbove={setMoveFileNameBoxAbove}
-
-          
         />
 
-{!moveFileNameBoxAbove && uploadedFileName && (
-        <div className="absolute bottom-[80px]  justify-start flex items-start">
-        <div className="border border-blue-500 p-4 rounded-lg bg-white relative items-start justify-start">
-          <button onClick={handleCloseUploadBox} className="absolute top-2 left-2 text-blue-500">
-            <X className="w-4 h-4" />
-          </button>
-          <span className="flex items-center justify-center mb-2 text-blue-500">
-            <FileText className="w-6 h-6" />
-          </span>
-          <span className="text-sm text-blue-500 ml-2">
-            {truncateFileName(uploadedFileName, 20)}
-          </span>
-        </div>
-      </div>
-      )}
+        {!moveFileNameBoxAbove && uploadedFileName && (
+          <div className="absolute bottom-[80px] justify-start flex items-start">
+            <div className="border border-blue-500 p-4 rounded-lg bg-white relative items-start justify-start">
+              <button onClick={handleCloseUploadBox} className="absolute top-2 left-2 text-blue-500">
+                <X className="w-4 h-4" />
+              </button>
+              <span className="flex items-center justify-center mb-2 text-blue-500">
+                <FileText className="w-6 h-6" />
+              </span>
+              <span className="text-sm text-blue-500 ml-2">
+                {truncateFileName(uploadedFileName, 20)}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
+}
+
+function updateUser(arg0: { firstName: string; }) {
+  throw new Error("Function not implemented.");
 }
