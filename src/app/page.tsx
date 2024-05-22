@@ -108,8 +108,25 @@ export default function Home() {
           </div>
         ))}
 
+
+       
+      </div>
+
+     
+
+      <div className="w-[70%] h-[10%] flex flex-col justify-start items-start mt-auto mb-5">
+        <LandingInput 
+          sendMessage={sendMessage} 
+          setExtractedText={setExtractedText} 
+          setUploadedFileName={setUploadedFileName}
+          setShowUploadedFileNameBox={setShowUploadedFileNameBox}
+          setMoveFileNameBoxAbove={setMoveFileNameBoxAbove}
+
+          
+        />
+
 {!moveFileNameBoxAbove && uploadedFileName && (
-        <div className="absolute bottom-[65px]  justify-start flex items-start">
+        <div className="absolute bottom-[80px]  justify-start flex items-start">
         <div className="border border-blue-500 p-4 rounded-lg bg-white relative items-start justify-start">
           <button onClick={handleCloseUploadBox} className="absolute top-2 left-2 text-blue-500">
             <X className="w-4 h-4" />
@@ -123,19 +140,6 @@ export default function Home() {
         </div>
       </div>
       )}
-       
-      </div>
-
-     
-
-      <div className="w-[70%] h-[10%] flex flex-col justify-center items-center mt-auto mb-5">
-        <LandingInput 
-          sendMessage={sendMessage} 
-          setExtractedText={setExtractedText} 
-          setUploadedFileName={setUploadedFileName}
-          setShowUploadedFileNameBox={setShowUploadedFileNameBox}
-          setMoveFileNameBoxAbove={setMoveFileNameBoxAbove}
-        />
       </div>
     </div>
   );
