@@ -1,0 +1,7 @@
+{
+  "databaseURL": "https://Navin-R-C-s-workspace-k10o4o.us-east-1.xata.sh/db/navin_chatbot",
+  "codegen": {
+    "output": "src/xata.ts",
+    "moduleType": "deno"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "mig_cp6ud5l3l5rk7fi9jolg",
+  "parentID": "mig_cp6tbcjtu6logb2a5vd0",
+  "checksum": "1:700f3f00f8cae5c6598309c8822372c6405e5004ef96c12358ef65b3c2552043",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "uniqueid",
+          "type": "string"
+        },
+        "table": "History"
+      }
+    }
+  ]
+}

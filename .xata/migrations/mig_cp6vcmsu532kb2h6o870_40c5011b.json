@@ -1,0 +1,16 @@
+{
+  "id": "mig_cp6vcmsu532kb2h6o870",
+  "parentID": "mig_cp6vcj4u532kb2h6o860",
+  "checksum": "1:40c5011b08a10d7bbcc7774f4f95ea180e0b95335b0f7136fca9adf41fd758b6",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "user_text",
+          "type": "string"
+        },
+        "table": "Chat_history"
+      }
+    }
+  ]
+}

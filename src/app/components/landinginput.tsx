@@ -31,6 +31,14 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage, setExtractedTe
     const file = files[0];
     const uniqueId = uuidv4();
 
+    axios.post("/api/custom", {
+      id: uniqueId,
+
+     
+    });
+    
+
+
     const url = `${process.env.NEXT_PUBLIC_CLOUDFLARE_API_URL}${uniqueId}`;
     const askjunior_url = `${process.env.NEXT_PUBLIC_TEXT_EXTRACTION_URL}`;
     const headers = {
@@ -38,12 +46,18 @@ const LandingInput: React.FC<LandingInputProps> = ({ sendMessage, setExtractedTe
     };
 
     setIsUploading(true);
-
     try {
       const response = await axios.put(url, file, { headers });
       console.log("File upload successful!");
       const pdfurl = `${process.env.NEXT_PUBLIC_CLOUDFLARE_CDN_URL}${uniqueId}`;
-      console.log({ pdfurl });
+      console.log("pdfurl", pdfurl );
+      
+    axios.post("/api/custom", {
+      url_pdf: pdfurl,
+
+     
+    });
+
 
       const text_response = await axios.post(askjunior_url, { pdf_url: pdfurl });
       console.log("Text extraction successful:", text_response.data.text);

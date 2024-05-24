@@ -7,6 +7,7 @@ import { readStreamableValue } from "ai/rsc";
 import { FileText, X } from "lucide-react";
 import { ClerkProvider, SignInButton, SignedIn, UserButton } from '@clerk/nextjs';
 import { useUser } from "@clerk/clerk-react";
+import axios from "axios";
 
 export default function Home() {
   const [conversation, setConversation] = useState<Message[]>([]);
@@ -46,8 +47,20 @@ export default function Home() {
       ...prevConversation,
       { role: "user", content },
       { role: "assistant", content: fullMessage },
+
+      
     ]);
 
+    console.log("Updated Conversation:", conversation);
+
+    const conversationJSON = JSON.stringify(conversation);
+    axios.post("/api/custom", {
+      conv: conversationJSON,
+
+     
+    });
+
+   
     // Move the file name box above the conversation once the user sends a message
     setMoveFileNameBoxAbove(true);
     setShowUploadedFileNameBox(true); // Ensure the uploaded file name box is shown
