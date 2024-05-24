@@ -103,7 +103,7 @@ export default function Home() {
           </>
         ) : (
           <span className="text-5xl font-serif react-textarea">
-            Welcome! Please sign in.
+            Welcome! Please sign in!
           </span>
         )}
       </div>
