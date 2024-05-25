@@ -6,17 +6,19 @@ const xata = getXataClient();
 export async function POST(request: NextRequest) {
   const req = await request.json();
 
+  const uniid = req.id;
+
   try {
     const record = await xata.db.Chat_history.create({
-      uniqueid: req.id,
-      pdf_url:req.url_pdf,
-      text: req.conv,
+      uniqueid: uniid,
+      pdf_url: req.url_pdf,
     });
-    return NextResponse.json(record);
+
+ console.log("idlogin",record.id)
+
+    return NextResponse.json({ recid: record.id });
   } catch (error) {
     console.error("Error creating chat history record:", error);
     return NextResponse.error();
-  }
+  }
 }
-
-
