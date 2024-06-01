@@ -87,6 +87,10 @@ const LandingInput: React.FC<LandingInputProps> = ({}) => {
         id: uniqueId,
       });
 
+
+      console.log("URL",pdfurl),
+      console.log("UID",uniqueId),
+
       setRecordId(record.data.recid);
       setExtractedTextState(text_response.data.text);
 
