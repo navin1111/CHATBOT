@@ -29,7 +29,7 @@ const vectorStore = new UpstashVectorStore(embeddingsModel, {
 });
 
 async function processPdfText(pdfText: string, userInput: string) {
-  const textSplitter = new CharacterTextSplitter({ chunkSize: 1000, chunkOverlap: 200 });
+  const textSplitter = new CharacterTextSplitter({ chunkSize: 2000, chunkOverlap: 500 });
   const chunks = await textSplitter.splitDocuments([{ pageContent: pdfText, metadata: {} }]);
   
   let mostSimilarDocumentContent = '';
@@ -105,7 +105,12 @@ export async function continueConversation(history: Message[], userInput: string
   (async () => {
     const { textStream } = await streamText({
       model: openai('gpt-3.5-turbo'),
-      system: "You are an AI assistant that can answer questions based on the text extracted from a PDF file provided by the user. Your goal is to provide accurate and relevant responses by considering both the userInput query and the pdfText. If the user's query is not related to the pdfText, still try to answer and interact with the user.",
+      system: "You are ChatGPT, a large language model trained by OpenAI, based on the GPT-3.5-turbo architecture. You can answer questions based on the text extracted from a PDF file provided by the user. Your goal is to provide accurate, comprehensive, and relevant responses by considering both the userInput query and the pdfText. When responding, follow these guidelines:\
+      1.Accurate Extraction: Extract relevant text from the PDF to directly answer the user's query.\
+      2.Comprehensive Coverage: When listing items such as subtopics, ensure that all relevant items are included in your response.\
+      3.Structured Response: Present the information in a clear and organized manner, using bullet points or headings as appropriate.\
+      4.Contextual Understanding: Use the context provided by both the user query and the PDF text to inform your responses.\
+      5.Interactive Engagement: If the user's query is not related to the pdfText, provide a helpful and relevant response based on general knowledge or ask for more clarification.",
       messages: [
         ...history,
         { role: 'user', content: userInput } as const,
