@@ -29,7 +29,7 @@ const vectorStore = new UpstashVectorStore(embeddingsModel, {
 });
 
 async function processPdfText(pdfText: string, userInput: string) {
-  const textSplitter = new CharacterTextSplitter({ chunkSize: 2000, chunkOverlap: 500 });
+  const textSplitter = new CharacterTextSplitter({ chunkSize: 800, chunkOverlap: 100 });
   const chunks = await textSplitter.splitDocuments([{ pageContent: pdfText, metadata: {} }]);
   
   let mostSimilarDocumentContent = '';
@@ -47,7 +47,7 @@ async function processPdfText(pdfText: string, userInput: string) {
   chunkScores.sort((a, b) => b.score - a.score);
 
   // Only embed the top N chunks to reduce computation (adjust N as needed)
-  const topChunks = chunkScores.slice(0, 2); // Adjust N based on your needs and performance testing
+  const topChunks = chunkScores.slice(0, 4); // Adjust N based on your needs and performance testing
 
   for (const { chunk } of topChunks) {
     const embeddings = await embeddingsModel.embedDocuments([chunk.pageContent]);
@@ -105,12 +105,7 @@ export async function continueConversation(history: Message[], userInput: string
   (async () => {
     const { textStream } = await streamText({
       model: openai('gpt-3.5-turbo'),
-      system: "You are ChatGPT, a large language model trained by OpenAI, based on the GPT-3.5-turbo architecture. You can answer questions based on the text extracted from a PDF file provided by the user. Your goal is to provide accurate, comprehensive, and relevant responses by considering both the userInput query and the pdfText. When responding, follow these guidelines:\
-      1.Accurate Extraction: Extract relevant text from the PDF to directly answer the user's query.\
-      2.Comprehensive Coverage: When listing items such as subtopics, ensure that all relevant items are included in your response.\
-      3.Structured Response: Present the information in a clear and organized manner, using bullet points or headings as appropriate.\
-      4.Contextual Understanding: Use the context provided by both the user query and the PDF text to inform your responses.\
-      5.Interactive Engagement: If the user's query is not related to the pdfText, provide a helpful and relevant response based on general knowledge or ask for more clarification.",
+      system: "You are an AI assistant that can answer questions based on the text extracted from a PDF file provided by the user. Your goal is to provide accurate and relevant responses by considering both the userInput query and the pdfText. If the user's query is not related to the pdfText, still try to answer and interact with the user.",
       messages: [
         ...history,
         { role: 'user', content: userInput } as const,
