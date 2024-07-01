@@ -11,6 +11,7 @@ import { readStreamableValue } from "ai/rsc";
 import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import 'highlight.js/styles/github.css';
+import { PDFDocument } from 'pdf-lib';
 
 interface LandingInputProps {}
 
@@ -29,6 +30,7 @@ const LandingInput: React.FC<LandingInputProps> = ({}) => {
   const [moveFileNameBoxAbove, setMoveFileNameBoxAboveState] = useState<boolean>(false);
   const [showUploadedFileNameBox, setShowUploadedFileNameBoxState] = useState<boolean>(true);
   const [recordId, setRecordId] = useState<string | null>(null);
+  const [pageCount, setPageCount] = useState<number | null>(null);
 
   const sendMessageFunction = async (content: string, uniqueId: string) => {
     if (content === lastUserMessage) {
@@ -84,6 +86,12 @@ const LandingInput: React.FC<LandingInputProps> = ({}) => {
 
       const text_response = await axios.post(askjunior_url, { pdf_url: pdfurl });
       setUploadedFileNameState(uniqueId);
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(arrayBuffer);
+      const totalPages = pdfDoc.getPageCount();
+
+      setUploadedFileNameState(file.name);
+      setPageCount(totalPages);
 
       const record = await axios.post("/api/custom", {
         url_pdf: pdfurl,
@@ -139,6 +147,10 @@ const LandingInput: React.FC<LandingInputProps> = ({}) => {
                 <FileText className="w-6 h-6" />
               </span>
               <span className="text-sm text-blue-500 ml-2">{uploadedFileName}</span>
+              {pageCount !== null && (
+                <span className="text-sm text-blue-500 ml-2">Page Count: {pageCount}</span>
+              )}
+
             </div>
           </div>
         )}
@@ -175,6 +187,11 @@ const LandingInput: React.FC<LandingInputProps> = ({}) => {
               <span className="text-sm text-blue-500 ml-2">
                 {truncateFileName(uploadedFileName, 20)}
               </span>
+
+              {pageCount !== null && (
+                <span className="text-sm text-blue-500 ml-2">Page Count: {pageCount}</span>
+              )}
+
             </div>
           </div>
         )}

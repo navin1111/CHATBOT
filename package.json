@@ -39,7 +39,7 @@
     "openai": "^4.47.3",
     "pdf-lib": "^1.17.1",
     "pdf-parse": "^1.1.1",
-    "pdfjs-dist": "^4.2.67",
+    "pdfjs-dist": "^4.3.136",
     "pickleparser": "^0.2.1",
     "pinecone-client": "^2.0.0",
     "react": "^18",
